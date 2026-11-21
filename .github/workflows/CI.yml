@@ -48,8 +48,8 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           tags: |
-            ${{vars.DOCKERHUB_USERNAME}}/devboard-frontend:latest
-            ${{vars.DOCKERHUB_USERNAME}}/devboard-frontend:${{ github.sha }}
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-frontend:latest
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-frontend:${{ github.sha }}
 
 
   backend:
@@ -92,8 +92,8 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ${{vars.DOCKERHUB_USERNAME}}/devboard-backend:latest
-            ${{vars.DOCKERHUB_USERNAME}}/devboard-backend:${{ github.sha }}
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-backend:latest
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-backend:${{ github.sha }}
 
 
   deploy:
