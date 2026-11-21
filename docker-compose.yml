@@ -1,0 +1,24 @@
+services:
+  frontend:
+    image: ${DOCKERHUB_USERNAME}/iqsense-frontend:${IMAGE_TAG:-latest}
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    image: ${DOCKERHUB_USERNAME}/iqsense-backend:${IMAGE_TAG:-latest}
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:4000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
