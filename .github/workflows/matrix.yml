@@ -10,7 +10,7 @@ jobs:
         strategy:
             fail-fast: false #after fail it run for next node version if set true it will stop at first fail
             matrix:
-                node-version: [16, 18, 20]
+                node-version: [18, 20]
         steps:
           - name: Checkout code
             uses: actions/checkout@v7
