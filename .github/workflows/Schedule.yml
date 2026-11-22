@@ -3,7 +3,7 @@ name: schedule1
 
 on:
     schedule:
-        - cron: '54 17 * * *' # 17:53 UTC
+        - cron: '29 12 * * *' # 17:53 UTC
     
 jobs:
     linter:
