@@ -1,11 +1,12 @@
 name: CI
 
 on:
-  push:
-    paths:
-      - '**'
-      - '!.github/workflows/**'
-    branches: [advanced]
+  # push:
+  #   paths:
+  #     - '**'
+  #     - '!.github/workflows/**'
+  #   branches: [advanced]
+  workflow_dispatch:
  
 permissions:
   contents: read
