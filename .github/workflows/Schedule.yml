@@ -3,7 +3,7 @@ name: schedule1
 
 on:
     schedule:
-        - cron: '* * * * *'
+        - cron: '25 18 * * *'
           timezone: 'Asia/Kolkata'
 jobs:
     linter:
