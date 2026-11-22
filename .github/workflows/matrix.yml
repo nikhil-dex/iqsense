@@ -1,5 +1,5 @@
 
-name: linter nodejs
+name: matrix1
 
 on:
     workflow_dispatch:

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  # push:
+  #   paths:
+  #     - '**'
+  #     - '!.github/workflows/**'
+  #   branches: [advanced]
+  workflow_dispatch:
+ 
+permissions:
+  contents: read
+
+jobs:
+  lint_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+        
+
+      - name: Install npm packages
+        working-directory: ./frontend
+        run: npm ci
+        
+        
+      - name: Run linters
+        working-directory: ./frontend
+        run: npm run lint
+          
+      - name: Run tests
+        working-directory: ./frontend
+        run: npm run test
+
+  lint_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+        
+
+      - name: Install npm packages
+        working-directory: ./backend
+        run: npm ci
+        
+        
+      - name: Run linters
+        working-directory: ./backend
+        run: npm run lint
+          
+      - name: Run tests
+        working-directory: ./backend
+        run: npm run test
+
+  build_and_push:
+     needs: [lint_frontend, lint_backend]
+     runs-on: ubuntu-latest
+     strategy:
+       fail-fast: false
+       matrix:
+         service: [frontend, backend]
+     steps:
+      - name: Docker login
+        uses: docker/login-action@v4
+        with:
+          username: ${{vars.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./${{matrix.service}}
+          file: ./${{matrix.service}}/Dockerfile
+          push: true
+          tags: |
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-${{matrix.service}}:latest
+            ${{vars.DOCKERHUB_USERNAME}}/iqsense-${{matrix.service}}:${{ github.sha }}
+
+
+#   deploy:
+#     needs: [frontend,backend]
+#     uses: ./.github/workflows/CD.yml
+#     secrets: inherit
